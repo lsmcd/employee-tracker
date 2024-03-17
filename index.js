@@ -1,4 +1,4 @@
-const inquirer = require("inquirer@8.2.4")
+const inquirer = require("inquirer")
 const mysql = require("mysql2")
 
 const db = mysql.createConnection(
