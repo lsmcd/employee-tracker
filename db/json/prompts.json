@@ -1,0 +1,46 @@
+{
+    "addDepartment": {
+        "type": "input",
+        "name": "department",
+        "message": "Department Name?"
+    },
+    "addRole": [{
+        "type": "input",
+        "name": "title",
+        "message": "Title?"
+    },
+    {
+        "type": "input",
+        "name": "salary",
+        "message": "Salary?"
+    },
+    {
+        "type": "list",
+        "name": "department",
+        "message": "Department?",
+        "choices": []
+    }],
+    "addEmployee": [{
+        "type": "input",
+        "name": "firstName",
+        "message": "First name?"
+    },
+    {
+        "type": "input",
+        "name": "lastName",
+        "message": "Last name?"
+    },
+    {
+        "type": "list",
+        "name": "role",
+        "message": "Role?",
+        "choices": []
+    },
+    {
+        "type": "list",
+        "name": "manager",
+        "message": "Manager?",
+        "choices": []
+    }
+]
+}
