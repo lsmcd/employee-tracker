@@ -60,6 +60,12 @@ inquirer
                 addTo("employee", json);
                 break;
             case "Update an employee role":
+                var employee = listContent(await viewAll("employee"), "Employee");
+                var role = listContent(await viewAll("role"), "Role");
+                var json = require("./db/json/prompts.json").updateEmployeeRole;
+                json[0].choices = employee;
+                json[1].choices = role;
+                updateInDB("employee", json);
                 break;
         }
     })
@@ -86,13 +92,10 @@ function listContent(result, json){
     else if (json === "Role") {
         names = "title"
     }
-
     var content = [];
-    console.log(result[i])
     for (var i = 0; i < result.length; i++){
         content[i] = {name: result[i][names], value: result[i].id};
     }
-    console.log(content);
     return content;
 }
 
@@ -112,6 +115,21 @@ function addTo(table, prompt){
         )
         .then((answers) => {
             addContent(table, answers);
+        })
+        .catch((err) => console.error(err));
+}
+
+function updateInDB(table, prompt){
+    console.log(prompt);
+    inquirer
+        .prompt(
+            prompt
+        )
+        .then((answers) => {
+            console.log(answers);
+            db.query(`UPDATE ${table} SET ${Object.keys(answers)[1]} = ? WHERE ${Object.keys(answers)[0]} = ?`, [Object.values(answers)[1], Object.values(answers)[0]], (err, result) => {
+                err && console.error(err);
+            });
         })
         .catch((err) => console.error(err));
 }
