@@ -31,41 +31,40 @@ inquirer
     .then(async (answers) => {
         switch (answers.action){
             case "View all departments":
-                viewAll(`department`);
+                viewAll(`department`).then((res) => console.log(res));
                 break;
             case "View all roles":
-                viewAll("role");
+                viewAll("role").then((res) => console.log(res));
                 break;
             case "View all employees":
-                viewAll("employee");
+                viewAll("employee").then((res) => console.log(res));
                 break;
             case "Add a department":
                 var json = require("./db/json/prompts.json").addDepartment;
                 addTo("department", json);
                 break;
             case "Add a role":
-                //var json = require("./db/json/prompts.json").addRole;
-                viewAll("department").then((result) => {
-                    var content = listContent(result, "Department");
-                    var json = require("./db/json/prompts.json").addRole;
-                    json[2].choices = content;
-                    addTo("department", json);
-                });
-                //viewAll("department", json, listContent, addTo);
+                var department = await viewAll("department");
+                var content = listContent(department, "department");
+                var json = require("./db/json/prompts.json").addRole;
+                json[2].choices = content;
+                addTo("role", json);
                 break;
             case "Add an employee":
                 var role = listContent(await viewAll("role"), "Role");
                 var employee = listContent(await viewAll("employee"), "Employee");
+                employee.push({name: "No Manager", value: undefined});
                 var json = require("./db/json/prompts.json").addEmployee;
                 json[2].choices = role;
                 json[3].choices = employee;
-                addTo("department", json);
+                addTo("employee", json);
                 break;
             case "Update an employee role":
                 break;
         }
     })
     .catch((err) => console.error(err));
+
 async function viewAll(table){
     return await new Promise((resolve, reject) => {
         db.query(`SELECT * FROM ${table}`, (err, result) => {
@@ -74,12 +73,13 @@ async function viewAll(table){
         });
     })
 }
-listContent = function(result, json){
+
+function listContent(result, json){
     var names = "name"
     if (json === "Employee"){
         var content = [];
         for (var i = 0; i < result.length; i++){
-            content[i] = result[i].first_name + " " + result[i].last_name;
+            content[i] = {name: result[i].first_name + " " + result[i].last_name, value: result[i].id};
         }
         return content;
     }
@@ -88,20 +88,30 @@ listContent = function(result, json){
     }
 
     var content = [];
+    console.log(result[i])
     for (var i = 0; i < result.length; i++){
-        content[i] = result[i][names];
+        content[i] = {name: result[i][names], value: result[i].id};
     }
     console.log(content);
     return content;
 }
 
-addTo = function(table, prompt){
+function addContent(table, answers){
+    // Converts ? variables into strings so doesn't work in an injection safe way :/
+    db.query(`INSERT INTO ${table} (${Object.keys(answers)}) VALUES ?`, [[Object.values(answers)]], (err, result) => {
+        err && console.error(err);
+        console.log("Successfully added to database")
+    });
+}
+
+function addTo(table, prompt){
     console.log(prompt);
     inquirer
         .prompt(
             prompt
         )
         .then((answers) => {
+            addContent(table, answers);
         })
         .catch((err) => console.error(err));
 }

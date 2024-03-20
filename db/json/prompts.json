@@ -1,7 +1,7 @@
 {
     "addDepartment": {
         "type": "input",
-        "name": "department",
+        "name": "name",
         "message": "Department Name?"
     },
     "addRole": [{
@@ -16,29 +16,29 @@
     },
     {
         "type": "list",
-        "name": "department",
+        "name": "department_id",
         "message": "Department?",
         "choices": []
     }],
     "addEmployee": [{
         "type": "input",
-        "name": "firstName",
+        "name": "first_name",
         "message": "First name?"
     },
     {
         "type": "input",
-        "name": "lastName",
+        "name": "last_name",
         "message": "Last name?"
     },
     {
         "type": "list",
-        "name": "role",
+        "name": "role_id",
         "message": "Role?",
         "choices": []
     },
     {
         "type": "list",
-        "name": "manager",
+        "name": "manager_id",
         "message": "Manager?",
         "choices": []
     }
