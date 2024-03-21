@@ -53,5 +53,17 @@
         "name": "role_id",
         "message": "New role?",
         "choices": []
+    }],
+    "updateEmployeeManager": [{
+        "type": "list",
+        "name": "id",
+        "message": "Employee?",
+        "choices": []
+    },
+    {
+        "type": "list",
+        "name": "manager_id",
+        "message": "New Manager?",
+        "choices": []
     }]
 }

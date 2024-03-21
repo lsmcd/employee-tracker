@@ -1,5 +1,5 @@
-const inquirer = require("inquirer")
-const mysql = require("mysql2")
+const inquirer = require("inquirer");
+const mysql = require("mysql2");
 
 const db = mysql.createConnection(
     {
@@ -24,7 +24,8 @@ inquirer
                 "Add a department",
                 "Add a role",
                 "Add an employee",
-                "Update an employee role"
+                "Update an employee's role",
+                "Update an employee's manager"
             ]
         }
     ])
@@ -59,12 +60,19 @@ inquirer
                 json[3].choices = employee;
                 addTo("employee", json);
                 break;
-            case "Update an employee role":
+            case "Update an employee's role":
                 var employee = listContent(await viewAll("employee"), "Employee");
                 var role = listContent(await viewAll("role"), "Role");
                 var json = require("./db/json/prompts.json").updateEmployeeRole;
                 json[0].choices = employee;
                 json[1].choices = role;
+                updateInDB("employee", json);
+                break;
+            case "Update an employee's manager":
+                var employee = listContent(await viewAll("employee"), "Employee");
+                var json = require("./db/json/prompts.json").updateEmployeeManager;
+                json[0].choices = employee;
+                json[1].choices = employee;
                 updateInDB("employee", json);
                 break;
         }
